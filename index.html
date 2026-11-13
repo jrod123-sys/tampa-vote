@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f3eee4">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Tampa Tour Vote">
+  <title>Tampa Tour Vote</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650;9..144,700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f3eee4;
+      --bg-2: #e9e1d2;
+      --ink: #1c1814;
+      --muted: #6d6458;
+      --card: #fffcf7;
+      --line: #e2dacd;
+      --accent: #1b6b61;
+      --accent-dark: #14544c;
+      --accent-soft: #e1f0ed;
+      --liked: #1b6b61;
+      --fine: #b86a1a;
+      --fine-soft: #f8ead8;
+      --didnt: #b42318;
+      --didnt-soft: #f8e2df;
+      --split: #9a5b12;
+      --shadow: 0 1px 2px rgba(28, 24, 20, .06), 0 8px 24px rgba(28, 24, 20, .06);
+      --safe-b: env(safe-area-inset-bottom, 0px);
+      --safe-t: env(safe-area-inset-top, 0px);
+      --tab-h: 64px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { min-height: 100%; }
+    body {
+      font-family: Outfit, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(900px 400px at 10% -10%, #efe4c8 0%, transparent 50%),
+        radial-gradient(700px 360px at 110% 0%, #dceae6 0%, transparent 46%),
+        var(--bg);
+      color: var(--ink);
+      line-height: 1.45;
+      -webkit-font-smoothing: antialiased;
+    }
+    button, input { font: inherit; }
+    button {
+      cursor: pointer;
+      border: 0;
+      background: none;
+      color: inherit;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .app {
+      max-width: 430px;
+      margin: 0 auto;
+      min-height: 100dvh;
+      padding: calc(18px + var(--safe-t)) 18px calc(var(--tab-h) + var(--safe-b) + 20px);
+    }
+    header.top {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+    header.top h1 {
+      font-family: Fraunces, Georgia, serif;
+      font-weight: 650;
+      font-size: 1.45rem;
+      letter-spacing: -0.02em;
+    }
+    header.top .count-pill {
+      font-size: .78rem;
+      font-weight: 600;
+      color: var(--accent-dark);
+      background: var(--accent-soft);
+      padding: 5px 10px;
+      border-radius: 999px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+    }
+    .intro { padding: 28px 22px 22px; }
+    .intro .eyebrow {
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      font-size: .7rem;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+    .intro h2 {
+      font-family: Fraunces, Georgia, serif;
+      font-weight: 650;
+      font-size: 1.7rem;
+      letter-spacing: -0.03em;
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+    .intro p { color: var(--muted); font-size: .98rem; }
+    .intro p + p { margin-top: 8px; }
+    .primary, .secondary, .ghost, .danger {
+      display: block;
+      width: 100%;
+      text-align: center;
+      border-radius: 14px;
+      padding: 14px 16px;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: transform .12s ease, background .12s ease, opacity .12s ease;
+    }
+    .primary { background: var(--accent); color: #fff; margin-top: 22px; }
+    .primary:active, .secondary:active, .tier:active, .choice:active { transform: scale(.98); }
+    .primary:disabled, .secondary:disabled { opacity: .5; cursor: default; transform: none; }
+    .secondary {
+      background: var(--ink);
+      color: #fff;
+      margin-top: 12px;
+    }
+    .ghost {
+      color: var(--muted);
+      margin-top: 8px;
+      font-weight: 500;
+    }
+    .danger { color: var(--didnt); margin-top: 8px; font-weight: 600; }
+    .code-box {
+      margin-top: 22px;
+      padding: 14px 16px;
+      background: #f6f1e8;
+      border-radius: 14px;
+      border: 1px dashed #d3c9b8;
+    }
+    .code-box label {
+      display: block;
+      font-size: .72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .code-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .code-row strong {
+      font-family: Outfit, monospace;
+      letter-spacing: .08em;
+      font-size: 1.02rem;
+    }
+    .code-row button {
+      font-size: .82rem;
+      font-weight: 600;
+      color: var(--accent-dark);
+      padding: 6px 10px;
+      background: var(--accent-soft);
+      border-radius: 8px;
+    }
+    .hint { margin-top: 8px; font-size: .8rem; color: var(--muted); }
+
+    .progress-wrap { margin-bottom: 16px; }
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: .8rem;
+      font-weight: 500;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .bar {
+      height: 6px;
+      background: var(--bg-2);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .bar > span {
+      display: block;
+      height: 100%;
+      background: var(--accent);
+      border-radius: 99px;
+      transition: width .25s ease;
+    }
+
+    .rate-card, .compare-card { padding: 26px 22px 22px; text-align: center; }
+    .place-name {
+      font-family: Fraunces, Georgia, serif;
+      font-weight: 650;
+      font-size: 1.85rem;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin: 6px 0 6px;
+    }
+    .prompt { color: var(--muted); margin-bottom: 20px; }
+    .tiers { display: flex; flex-direction: column; gap: 10px; }
+    .tier {
+      border: 2px solid var(--line);
+      background: #fff;
+      border-radius: 16px;
+      padding: 15px 16px;
+      font-weight: 650;
+      font-size: 1.05rem;
+    }
+    .tier.liked { border-color: var(--liked); color: var(--liked); background: var(--accent-soft); }
+    .tier.fine { border-color: var(--fine); color: var(--fine); background: var(--fine-soft); }
+    .tier.didnt { border-color: var(--didnt); color: var(--didnt); background: var(--didnt-soft); }
+    .deal {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 18px 4px 4px;
+      text-align: left;
+      color: var(--ink);
+      font-size: .92rem;
+    }
+    .deal input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--didnt);
+    }
+    .deal span { color: var(--muted); font-size: .8rem; display: block; font-weight: 400; }
+    .nav-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .nav-row .ghost { flex: 1; }
+
+    .vs {
+      font-family: Fraunces, Georgia, serif;
+      font-style: italic;
+      color: var(--muted);
+      margin: 6px 0;
+      font-size: .95rem;
+    }
+    .choice {
+      display: block;
+      width: 100%;
+      text-align: center;
+      border: 2px solid var(--line);
+      background: #fff;
+      border-radius: 18px;
+      padding: 22px 16px;
+      font-family: Fraunces, Georgia, serif;
+      font-weight: 650;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+    .choice:hover { border-color: var(--accent); }
+
+    .list { display: flex; flex-direction: column; gap: 10px; }
+    .place {
+      display: grid;
+      grid-template-columns: 36px 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 14px 16px;
+    }
+    .place .n {
+      font-family: Fraunces, Georgia, serif;
+      font-weight: 700;
+      font-size: 1.15rem;
+      color: var(--muted);
+    }
+    .place h3 {
+      font-size: 1rem;
+      font-weight: 650;
+      letter-spacing: -0.01em;
+    }
+    .meta {
+      font-size: .78rem;
+      color: var(--muted);
+      margin-top: 2px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 10px;
+    }
+    .score {
+      font-family: Fraunces, Georgia, serif;
+      font-weight: 700;
+      font-size: 1.35rem;
+      letter-spacing: -0.03em;
+    }
+    .badge {
+      display: inline-block;
+      font-size: .68rem;
+      font-weight: 650;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      padding: 2px 7px;
+      border-radius: 99px;
+    }
+    .badge.liked { background: var(--accent-soft); color: var(--accent-dark); }
+    .badge.fine { background: var(--fine-soft); color: var(--fine); }
+    .badge.didnt { background: var(--didnt-soft); color: var(--didnt); }
+    .badge.agreed { background: var(--accent-soft); color: var(--accent-dark); }
+    .badge.split { background: var(--fine-soft); color: var(--split); }
+    .badge.db { background: var(--didnt-soft); color: var(--didnt); }
+
+    .empty {
+      padding: 36px 22px;
+      text-align: center;
+    }
+    .empty h2 {
+      font-family: Fraunces, Georgia, serif;
+      font-size: 1.4rem;
+      margin-bottom: 8px;
+    }
+    .empty p { color: var(--muted); }
+
+    .lock-card { padding: 32px 22px; text-align: center; }
+    .lock-card h2 {
+      font-family: Fraunces, Georgia, serif;
+      font-size: 1.55rem;
+      margin: 8px 0 8px;
+    }
+    .lock-card p { color: var(--muted); }
+    .big-count {
+      font-family: Fraunces, Georgia, serif;
+      font-weight: 700;
+      font-size: 2.6rem;
+      letter-spacing: -0.04em;
+      color: var(--accent-dark);
+    }
+    .lock-card .bar { margin: 18px auto 8px; max-width: 220px; }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin: 4px 2px 12px;
+    }
+    .section-head h2 {
+      font-family: Fraunces, Georgia, serif;
+      font-size: 1.35rem;
+    }
+    .section-head p { font-size: .8rem; color: var(--muted); }
+
+    nav.tabs {
+      position: fixed;
+      left: 0; right: 0; bottom: 0;
+      background: rgba(243, 238, 228, .92);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid var(--line);
+      padding: 6px 10px var(--safe-b);
+      display: flex;
+      justify-content: center;
+      z-index: 20;
+    }
+    nav.tabs .inner {
+      width: 100%;
+      max-width: 430px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 4px;
+    }
+    nav.tabs button {
+      padding: 10px 8px 8px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: .82rem;
+      color: var(--muted);
+    }
+    nav.tabs button.active {
+      background: #fff;
+      color: var(--ink);
+      box-shadow: 0 1px 3px rgba(28,24,20,.08);
+    }
+    nav.tabs button .ic { display: block; font-size: 1.05rem; margin-bottom: 1px; }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: calc(var(--tab-h) + var(--safe-b) + 12px);
+      transform: translateX(-50%) translateY(12px);
+      background: var(--ink);
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 12px;
+      font-size: .88rem;
+      font-weight: 500;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s, transform .2s;
+      z-index: 40;
+      max-width: 90%;
+      text-align: center;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    .modal-back {
+      position: fixed;
+      inset: 0;
+      background: rgba(28, 24, 20, .4);
+      z-index: 30;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .modal {
+      width: 100%;
+      max-width: 430px;
+      background: var(--card);
+      border-radius: 22px 22px 0 0;
+      padding: 22px 20px calc(18px + var(--safe-b));
+      box-shadow: var(--shadow);
+    }
+    .modal h2 {
+      font-family: Fraunces, Georgia, serif;
+      font-size: 1.3rem;
+      margin-bottom: 8px;
+    }
+    .modal p { color: var(--muted); font-size: .92rem; margin-bottom: 14px; }
+    .modal input {
+      width: 100%;
+      padding: 13px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: #fff;
+      font-size: 16px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .modal input:focus { outline: 2px solid var(--accent); border-color: transparent; }
+    .hidden { display: none !important; }
+    .err { color: var(--didnt); font-size: .88rem; margin-top: 8px; }
+    .footnotes { margin-top: 16px; text-align: center; }
+    .footnotes button { color: var(--muted); font-size: .85rem; font-weight: 500; text-decoration: underline; text-underline-offset: 3px; }
+  </style>
+</head>
+<body>
+  <div class="app" id="app"></div>
+  <nav class="tabs" aria-label="Main">
+    <div class="inner">
+      <button data-tab="vote" class="active"><span class="ic">✓</span>Vote</button>
+      <button data-tab="mine"><span class="ic">☰</span>My List</button>
+      <button data-tab="group"><span class="ic">◉</span>Group Rank</button>
+    </div>
+  </nav>
+  <div class="toast" id="toast" role="status"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = 'https://bmtsthcotxzjgleyadku.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_Z60dn8q-nPcZ_-F2Su90Tg_CnVntUXD';
+    const PROPERTIES = [
+      'Bay Crossing',
+      'Clipper Cove',
+      'Westshore Crossing',
+      'Tuscany Pointe at Tampa',
+      'Westshore Palms at Kennedy',
+      'The Delmar',
+    ];
+    const STORAGE_KEY = 'tampa-vote-voter-code';
+    const TIER_LABEL = { liked: 'Liked', fine: 'Fine', didnt_like: "Didn't like" };
+    const TIER_HIGH = { liked: 10, fine: 6.9, didnt_like: 3.9 };
+    const TIER_LOW  = { liked: 7,  fine: 4,   didnt_like: 0 };
+
+    const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const $ = (sel, el = document) => el.querySelector(sel);
+    const app = document.getElementById('app');
+    function esc(s) {
+      return String(s ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    const state = {
+      tab: 'vote',
+      phase: 'intro', // intro | rate | compare | done
+      code: null,
+      rateIndex: 0,
+      ratings: {}, // property -> {tier, deal_breaker}
+      sortedTiers: { liked: [], fine: [], didnt_like: [] },
+      compare: null, // { a, b, resolve } current pair
+      compareProgress: { done: 0, total: 0 },
+      myList: [],
+      voted: 0,
+      total: 4,
+      group: [],
+      busy: false,
+      showRestore: false,
+      showRedo: false,
+      restoreValue: '',
+      restoreError: '',
+    };
+
+    function generateCode() {
+      const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+      const bytes = crypto.getRandomValues(new Uint8Array(12));
+      let s = '';
+      for (let i = 0; i < 12; i++) {
+        s += alphabet[bytes[i] % 32];
+        if (i === 3 || i === 7) s += '-';
+      }
+      return s;
+    }
+
+    function normalizeCode(c) {
+      return String(c || '').trim().toUpperCase();
+    }
+
+    function loadOrCreateCode() {
+      let c = normalizeCode(localStorage.getItem(STORAGE_KEY) || '');
+      if (c.length < 8) {
+        c = generateCode();
+        localStorage.setItem(STORAGE_KEY, c);
+      }
+      return c;
+    }
+
+    function saveCode(c) {
+      const n = normalizeCode(c);
+      localStorage.setItem(STORAGE_KEY, n);
+      state.code = n;
+    }
+
+    function fmtScore(n) {
+      const s = Number(n).toFixed(2);
+      return s.endsWith('0') ? s.slice(0, -1) : s;
+    }
+
+    function toast(msg) {
+      const el = document.getElementById('toast');
+      el.textContent = msg;
+      el.classList.add('show');
+      clearTimeout(toast._t);
+      toast._t = setTimeout(() => el.classList.remove('show'), 2400);
+    }
+
+    function rpcError(error) {
+      const raw = (error && (error.message || error.details || error.hint)) || 'Something went wrong.';
+      return raw.replace(/^[A-Z0-9]{5}:\s*/, '').replace(/^.*error:\s*/i, '');
+    }
+
+    async function api(fn, args = {}) {
+      const { data, error } = await sb.rpc(fn, args);
+      if (error) throw error;
+      return data;
+    }
+
+    async function refreshCount() {
+      const data = await api('get_vote_count');
+      state.voted = data.voted;
+      state.total = data.total;
+    }
+
+    async function refreshMine() {
+      const data = await api('get_my_list', { voter_code: state.code });
+      state.myList = Array.isArray(data) ? data : [];
+    }
+
+    async function refreshGroup() {
+      const data = await api('get_group_rank');
+      state.group = Array.isArray(data) ? data : [];
+    }
+
+    function scoresFor(order) {
+      // order is array of {property, tier, deal_breaker} already in overall order
+      const byTier = { liked: [], fine: [], didnt_like: [] };
+      for (const item of order) byTier[item.tier].push(item);
+      const out = [];
+      let rank = 1;
+      for (const tier of ['liked', 'fine', 'didnt_like']) {
+        const items = byTier[tier];
+        const n = items.length;
+        const high = TIER_HIGH[tier], low = TIER_LOW[tier];
+        items.forEach((item, i) => {
+          const score = n === 1 ? high : high - i * (high - low) / (n - 1);
+          out.push({ ...item, score: Math.round(score * 100) / 100, rank: rank++ });
+        });
+      }
+      return out;
+    }
+
+    function estimateCompareTotal(ratings) {
+      let total = 0;
+      for (const tier of ['liked', 'fine', 'didnt_like']) {
+        const n = PROPERTIES.filter((p) => ratings[p] && ratings[p].tier === tier).length;
+        // binary insertion comparisons, upper bound n * log2(n)
+        for (let i = 1; i < n; i++) total += Math.ceil(Math.log2(i + 1));
+      }
+      return total;
+    }
+
+    function askPrefer(a, b) {
+      return new Promise((resolve) => {
+        state.compare = { a, b, resolve };
+        state.phase = 'compare';
+        render();
+      });
+    }
+
+    async function orderTier(items) {
+      const sorted = [];
+      for (const item of items) {
+        if (sorted.length === 0) { sorted.push(item); continue; }
+        let lo = 0, hi = sorted.length;
+        while (lo < hi) {
+          const mid = Math.floor((lo + hi) / 2);
+          const preferNew = await askPrefer(item, sorted[mid]);
+          state.compareProgress.done++;
+          if (preferNew) hi = mid;
+          else lo = mid + 1;
+        }
+        sorted.splice(lo, 0, item);
+      }
+      return sorted;
+    }
+
+    async function runComparisons() {
+      const buckets = { liked: [], fine: [], didnt_like: [] };
+      for (const p of PROPERTIES) {
+        const r = state.ratings[p];
+        if (!r) continue;
+        buckets[r.tier].push({ property: p, ...r });
+      }
+      state.compareProgress = { done: 0, total: estimateCompareTotal(state.ratings) };
+      for (const tier of ['liked', 'fine', 'didnt_like']) {
+        state.sortedTiers[tier] = await orderTier(buckets[tier]);
+      }
+      state.compare = null;
+      await submitCurrent();
+    }
+
+    async function submitCurrent() {
+      state.busy = true;
+      render();
+      try {
+        const order = [
+          ...state.sortedTiers.liked,
+          ...state.sortedTiers.fine,
+          ...state.sortedTiers.didnt_like,
+        ].map((item, i) => ({
+          property: item.property,
+          tier: item.tier,
+          deal_breaker: !!item.deal_breaker,
+          rank: i + 1,
+        }));
+        const data = await api('submit_ranking', {
+          voter_code: state.code,
+          rankings: order,
+        });
+        state.myList = data;
+        state.phase = 'done';
+        state.tab = 'mine';
+        await refreshCount();
+        if (state.voted >= 4) await refreshGroup();
+        toast('Your list is saved.');
+      } catch (err) {
+        state.phase = 'done';
+        state.tab = 'mine';
+        toast(rpcError(err));
+      } finally {
+        state.busy = false;
+        render();
+      }
+    }
+
+    function startRating(reset) {
+      if (reset) {
+        state.ratings = {};
+        state.rateIndex = 0;
+        state.sortedTiers = { liked: [], fine: [], didnt_like: [] };
+        state.compare = null;
+      }
+      state.phase = 'rate';
+      state.tab = 'vote';
+      state.showRedo = false;
+      render();
+    }
+
+    function pickTier(tier) {
+      const p = PROPERTIES[state.rateIndex];
+      const prev = state.ratings[p] || { deal_breaker: false };
+      state.ratings[p] = { tier, deal_breaker: prev.deal_breaker };
+      render();
+    }
+
+    function toggleDeal() {
+      const p = PROPERTIES[state.rateIndex];
+      const prev = state.ratings[p] || { tier: null, deal_breaker: false };
+      state.ratings[p] = { ...prev, deal_breaker: !prev.deal_breaker };
+      render();
+    }
+
+    function nextRate() {
+      const p = PROPERTIES[state.rateIndex];
+      if (!state.ratings[p] || !state.ratings[p].tier) return;
+      if (state.rateIndex < PROPERTIES.length - 1) {
+        state.rateIndex++;
+        render();
+        return;
+      }
+      const needsCompare = ['liked', 'fine', 'didnt_like']
+        .some((t) => PROPERTIES.filter((x) => state.ratings[x] && state.ratings[x].tier === t).length >= 2);
+      if (needsCompare) {
+        state.phase = 'compare';
+        render();
+        runComparisons();
+      } else {
+        for (const t of ['liked', 'fine', 'didnt_like']) {
+          state.sortedTiers[t] = PROPERTIES
+            .filter((x) => state.ratings[x] && state.ratings[x].tier === t)
+            .map((x) => ({ property: x, ...state.ratings[x] }));
+        }
+        submitCurrent();
+      }
+    }
+
+    function prevRate() {
+      if (state.rateIndex > 0) {
+        state.rateIndex--;
+        render();
+      }
+    }
+
+    async function copyCode() {
+      try {
+        await navigator.clipboard.writeText(state.code);
+        toast('Code copied.');
+      } catch {
+        toast('Copy failed — select the code instead.');
+      }
+    }
+
+    async function applyRestore() {
+      const n = normalizeCode(state.restoreValue);
+      if (n.length < 8) {
+        state.restoreError = 'Enter a code that is at least 8 characters.';
+        render();
+        return;
+      }
+      saveCode(n);
+      state.busy = true;
+      state.restoreError = '';
+      render();
+      try {
+        await refreshMine();
+        await refreshCount();
+        if (state.voted >= 4) await refreshGroup();
+        state.showRestore = false;
+        if (state.myList.length) {
+          state.tab = 'mine';
+          state.phase = 'done';
+          toast('Your list is back.');
+        } else {
+          state.tab = 'vote';
+          state.phase = 'intro';
+          toast('Code saved. No list on this code yet.');
+        }
+      } catch (err) {
+        state.restoreError = rpcError(err);
+      } finally {
+        state.busy = false;
+        render();
+      }
+    }
+
+    function countPill() {
+      return `<span class="count-pill">${state.voted} of ${state.total} voted</span>`;
+    }
+
+    function codeBox(opts = {}) {
+      return `
+        <div class="code-box">
+          <label>Your private code</label>
+          <div class="code-row">
+            <strong>${esc(state.code)}</strong>
+            <button type="button" data-act="copy">Copy</button>
+          </div>
+          <p class="hint">Keep this if you switch phones. Nobody else can see your list with it.</p>
+          ${opts.restoreLink !== false ? `<p class="hint"><button type="button" data-act="open-restore" style="color:var(--accent-dark);font-weight:600">I already have a code</button></p>` : ''}
+        </div>`;
+    }
+
+    function renderIntro() {
+      const full = state.voted >= 4 && state.myList.length === 0;
+      return `
+        <header class="top"><h1>Tampa Tour Vote</h1>${countPill()}</header>
+        <div class="card intro">
+          <div class="eyebrow">Six places · four people</div>
+          <h2>Rank the tour, your way.</h2>
+          <p>For each place, say if you Liked it, it was Fine, or you Didn't like it. If more than one lands in the same group, you'll pick a favorite between them.</p>
+          <p>Your list stays private. The group rank opens once all four of you have voted.</p>
+          ${full ? `<p class="err">All 4 spots are already filled. If you voted on another phone, restore your code.</p>` : ''}
+          <button class="primary" data-act="start" ${full ? 'disabled' : ''}>Start ranking</button>
+          ${codeBox()}
+        </div>`;
+    }
+
+    function renderRate() {
+      const p = PROPERTIES[state.rateIndex];
+      const cur = state.ratings[p] || { tier: null, deal_breaker: false };
+      const step = state.rateIndex + 1;
+      const last = state.rateIndex === PROPERTIES.length - 1;
+      return `
+        <header class="top"><h1>Tampa Tour Vote</h1>${countPill()}</header>
+        <div class="progress-wrap">
+          <div class="progress-meta"><span>How it felt</span><span>${step} of 6</span></div>
+          <div class="bar"><span style="width:${(step / 6) * 100}%"></span></div>
+        </div>
+        <div class="card rate-card">
+          <div class="eyebrow" style="color:var(--muted);letter-spacing:.1em;text-transform:uppercase;font-size:.7rem;font-weight:600">Place ${step}</div>
+          <div class="place-name">${esc(p)}</div>
+          <p class="prompt">How did this one feel?</p>
+          <div class="tiers">
+            <button class="tier ${cur.tier === 'liked' ? 'liked' : ''}" data-act="tier" data-tier="liked">Liked it</button>
+            <button class="tier ${cur.tier === 'fine' ? 'fine' : ''}" data-act="tier" data-tier="fine">Fine</button>
+            <button class="tier ${cur.tier === 'didnt_like' ? 'didnt' : ''}" data-act="tier" data-tier="didnt_like">Didn't like it</button>
+          </div>
+          <label class="deal">
+            <input type="checkbox" data-act="deal" ${cur.deal_breaker ? 'checked' : ''}>
+            <div>Deal breaker<div><span>I wouldn't live here</span></div></div>
+          </label>
+          <button class="primary" data-act="next-rate" ${cur.tier ? '' : 'disabled'}>${last ? 'Continue' : 'Next'}</button>
+          <div class="nav-row">
+            <button class="ghost" data-act="prev-rate" ${state.rateIndex === 0 ? 'disabled' : ''}>Back</button>
+          </div>
+        </div>`;
+    }
+
+    function renderCompare() {
+      const c = state.compare;
+      const { done, total } = state.compareProgress;
+      if (!c) {
+        return `
+          <header class="top"><h1>Tampa Tour Vote</h1>${countPill()}</header>
+          <div class="card lock-card">
+            <p class="prompt">A few quick choices to order the ones you felt the same about.</p>
+            <p>Getting the next pair…</p>
+          </div>`;
+      }
+      return `
+        <header class="top"><h1>Tampa Tour Vote</h1>${countPill()}</header>
+        <div class="progress-wrap">
+          <div class="progress-meta"><span>Which did you like more?</span><span>${Math.min(done + 1, Math.max(total, 1))} of ${Math.max(total, 1)}</span></div>
+          <div class="bar"><span style="width:${total ? (done / total) * 100 : 10}%"></span></div>
+        </div>
+        <div class="card compare-card">
+          <p class="prompt">Tap the one you liked more</p>
+          <button class="choice" data-act="prefer" data-who="a">${esc(c.a.property)}</button>
+          <div class="vs">or</div>
+          <button class="choice" data-act="prefer" data-who="b">${esc(c.b.property)}</button>
+        </div>`;
+    }
+
+    function placeRow(row, extra = '') {
+      const tier = row.tier || '';
+      return `
+        <article class="card place">
+          <div class="n">${row.rank}</div>
+          <div>
+            <h3>${esc(row.property)}</h3>
+            <div class="meta">
+              ${tier ? `<span class="badge ${tier}">${TIER_LABEL[tier]}</span>` : ''}
+              ${row.deal_breaker ? `<span class="badge db">Deal breaker</span>` : ''}
+              ${row.agreement ? `<span class="badge ${row.agreement}">${row.agreement === 'agreed' ? 'Agreed' : 'Split'}</span>` : ''}
+              ${extra}
+            </div>
+          </div>
+          <div class="score">${fmtScore(row.score ?? row.avg_score)}</div>
+        </article>`;
+    }
+
+    function renderMine() {
+      if (state.busy && !state.myList.length) {
+        return `<header class="top"><h1>My List</h1>${countPill()}</header><div class="card empty"><p>Saving…</p></div>`;
+      }
+      if (!state.myList.length) {
+        return `
+          <header class="top"><h1>My List</h1>${countPill()}</header>
+          <div class="card empty">
+            <h2>No list yet</h2>
+            <p>Rank the six places and your scores will show up here. Only this phone, with your code, can see them.</p>
+            <button class="primary" data-act="start">Start ranking</button>
+            ${codeBox()}
+          </div>`;
+      }
+      const rows = state.myList.slice().sort((a, b) => a.rank - b.rank);
+      return `
+        <header class="top"><h1>My List</h1>${countPill()}</header>
+        <div class="section-head">
+          <h2>Your ranking</h2>
+          <p>Scores out of 10, private to you</p>
+        </div>
+        <div class="list">${rows.map((r) => placeRow(r)).join('')}</div>
+        <button class="ghost" data-act="open-redo">Redo my ranking</button>
+        ${codeBox()}`;
+    }
+
+    function renderGroup() {
+      const unlocked = state.voted >= 4 && state.group.length > 0;
+      if (!unlocked) {
+        return `
+          <header class="top"><h1>Group Rank</h1>${countPill()}</header>
+          <div class="card lock-card">
+            <div class="big-count">${state.voted} of ${state.total}</div>
+            <h2>Waiting on everyone</h2>
+            <p>The combined ranking unlocks when all 4 of you have submitted a complete list.</p>
+            <div class="bar"><span style="width:${(state.voted / state.total) * 100}%"></span></div>
+          </div>`;
+      }
+      const rows = state.group;
+      return `
+        <header class="top"><h1>Group Rank</h1>${countPill()}</header>
+        <div class="section-head">
+          <h2>Combined ranking</h2>
+          <p>Average score · all 4 lists in</p>
+        </div>
+        <div class="list">${rows.map((r, i) => placeRow({
+          ...r,
+          rank: i + 1,
+          score: r.avg_score,
+        }, `<span>${r.first_place_count} first-place pick${r.first_place_count === 1 ? '' : 's'}</span>
+            <span>${r.deal_breaker_count} deal breaker${r.deal_breaker_count === 1 ? '' : 's'}</span>`)).join('')}</div>`;
+    }
+
+    function renderModals() {
+      let html = '';
+      if (state.showRestore) {
+        html += `
+          <div class="modal-back" data-act="close-restore">
+            <div class="modal" role="dialog" aria-labelledby="restore-title">
+              <h2 id="restore-title">Restore a code</h2>
+              <p>Paste the code from your other phone. This will replace the code stored here.</p>
+              <input id="restore-input" maxlength="128" autocomplete="off" spellcheck="false"
+                value="${esc(state.restoreValue)}" placeholder="XXXX-XXXX-XXXX">
+              ${state.restoreError ? `<p class="err">${esc(state.restoreError)}</p>` : ''}
+              <button class="primary" data-act="apply-restore" ${state.busy ? 'disabled' : ''}>Restore</button>
+              <button class="ghost" data-act="close-restore">Cancel</button>
+            </div>
+          </div>`;
+      }
+      if (state.showRedo) {
+        html += `
+          <div class="modal-back" data-act="close-redo">
+            <div class="modal" role="dialog">
+              <h2>Redo your ranking?</h2>
+              <p>This replaces the list you already saved. Your voter code stays the same.</p>
+              <button class="secondary" data-act="confirm-redo">Start over</button>
+              <button class="ghost" data-act="close-redo">Cancel</button>
+            </div>
+          </div>`;
+      }
+      return html;
+    }
+
+    function render() {
+      let body = '';
+      if (state.tab === 'vote') {
+        if (state.phase === 'rate') body = renderRate();
+        else if (state.phase === 'compare') body = renderCompare();
+        else if (state.phase === 'done' && state.myList.length) {
+          // After saving, Vote tab offers a redo rather than a blank intro
+          body = `
+            <header class="top"><h1>Tampa Tour Vote</h1>${countPill()}</header>
+            <div class="card intro">
+              <div class="eyebrow">Saved</div>
+              <h2>Your list is in.</h2>
+              <p>You can review it on My List, or redo your ranking if you change your mind.</p>
+              <button class="primary" data-act="go-mine">See my list</button>
+              <button class="ghost" data-act="open-redo">Redo my ranking</button>
+              ${codeBox()}
+            </div>`;
+        } else body = renderIntro();
+      } else if (state.tab === 'mine') body = renderMine();
+      else body = renderGroup();
+
+      app.innerHTML = body + renderModals();
+      document.querySelectorAll('nav.tabs button').forEach((b) => {
+        b.classList.toggle('active', b.dataset.tab === state.tab);
+      });
+      const input = document.getElementById('restore-input');
+      if (input) {
+        input.focus();
+        input.setSelectionRange(input.value.length, input.value.length);
+      }
+    }
+
+    app.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-act]');
+      if (!btn) return;
+      const act = btn.dataset.act;
+      if (act === 'start') startRating(true);
+      else if (act === 'tier') pickTier(btn.dataset.tier);
+      else if (act === 'next-rate') nextRate();
+      else if (act === 'prev-rate') prevRate();
+      else if (act === 'prefer') {
+        const c = state.compare;
+        if (!c) return;
+        const preferA = btn.dataset.who === 'a';
+        const resolve = c.resolve;
+        state.compare = null;
+        resolve(preferA);
+      }
+      else if (act === 'copy') copyCode();
+      else if (act === 'open-restore') { state.showRestore = true; state.restoreValue = ''; state.restoreError = ''; render(); }
+      else if (act === 'close-restore') { if (e.target === btn) { state.showRestore = false; render(); } }
+      else if (act === 'apply-restore') applyRestore();
+      else if (act === 'open-redo') { state.showRedo = true; render(); }
+      else if (act === 'close-redo') { if (e.target === btn || btn.classList.contains('ghost')) { state.showRedo = false; render(); } }
+      else if (act === 'confirm-redo') startRating(true);
+      else if (act === 'go-mine') { state.tab = 'mine'; render(); }
+    });
+
+    app.addEventListener('change', (e) => {
+      if (e.target.matches('[data-act="deal"]')) toggleDeal();
+    });
+
+    app.addEventListener('input', (e) => {
+      if (e.target.id === 'restore-input') state.restoreValue = e.target.value;
+    });
+
+    app.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && e.target.id === 'restore-input') {
+        e.preventDefault();
+        applyRestore();
+      }
+    });
+
+    document.querySelector('nav.tabs').addEventListener('click', async (e) => {
+      const btn = e.target.closest('button[data-tab]');
+      if (!btn) return;
+      state.tab = btn.dataset.tab;
+      if (state.tab === 'group') {
+        try { await refreshCount(); if (state.voted >= 4) await refreshGroup(); }
+        catch (err) { toast(rpcError(err)); }
+      }
+      if (state.tab === 'mine') {
+        try { await refreshMine(); }
+        catch (err) { toast(rpcError(err)); }
+      }
+      render();
+    });
+
+    (async function init() {
+      state.code = loadOrCreateCode();
+      try {
+        await Promise.all([refreshMine(), refreshCount()]);
+        if (state.voted >= 4) await refreshGroup();
+      } catch (err) {
+        toast(rpcError(err));
+      }
+      if (state.myList.length) {
+        state.phase = 'done';
+        state.tab = 'mine';
+      }
+      render();
+    })();
+  </script>
+</body>
+</html>
