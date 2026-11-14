@@ -1106,7 +1106,7 @@
         <header class="top"><h1>Group Rank</h1>${pill()}</header>
         <div class="section-head">
           <h2>Combined ranking</h2>
-          <p>A place unlocks once all 4 of you have rated it</p>
+          <p>A place unlocks once 2 of you have rated it</p>
         </div>
         ${!rows.length ? `<p class="loading">Loading…</p>` : `<div class="list">${rows.map((r) => {
           const p = BY_NAME[r.property] || { img: '', name: r.property };
@@ -1135,6 +1135,7 @@
                     <span class="badge ${agr}">${agr === 'agreed' ? 'Agreed' : 'Split'}</span>
                     <span>${fp} first-place pick${fp === 1 ? '' : 's'}</span>
                     <span>${db} deal breaker${db === 1 ? '' : 's'}</span>
+                    <span>${Number(r.voted) || 0} of 4 rated</span>
                   </div>
                 </div>
                 <div class="score">${esc(fmtScore(r.avg_score))}</div>
