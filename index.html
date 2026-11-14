@@ -977,7 +977,7 @@
                   <div class="cta-row">
                     ${viewLink(p.name)}
                     ${row
-                      ? `<span class="rated-chip badge ${esc(row.tier)}">${esc(TIER_LABEL[row.tier])} · ${esc(fmtScore(row.score))}</span>`
+                      ? `<span class="rated-chip badge ${row.tier === 'didnt_like' ? 'didnt' : esc(row.tier)}">${esc(TIER_LABEL[row.tier])} · ${esc(fmtScore(row.score))}</span>`
                       : `<button class="rate-btn" data-act="rate" data-name="${esc(p.name)}">Rate</button>`}
                   </div>
                 </div>
@@ -1072,7 +1072,7 @@
             <div>
               <h3>${esc(row.property)}</h3>
               <div class="meta">
-                <span class="badge ${esc(row.tier)}">${esc(TIER_LABEL[row.tier])}</span>
+                <span class="badge ${row.tier === 'didnt_like' ? 'didnt' : esc(row.tier)}">${esc(TIER_LABEL[row.tier])}</span>
                 ${row.deal_breaker ? '<span class="badge db">Deal breaker</span>' : ''}
                 ${viewLink(row.property)}
               </div>
