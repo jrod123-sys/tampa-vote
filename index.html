@@ -699,6 +699,7 @@
       { name: 'Westshore Palms at Kennedy', img: 'img/westshore-palms.jpg',    url: 'https://www.westshorepalmstpa.com/' },
       { name: 'The Delmar',                 img: 'img/the-delmar.jpg',         url: 'https://www.liveatthedelmar.com/' },
       { name: 'Bayvue',                     img: 'img/bayvue.jpg',             url: 'https://www.livebayvuetampa.com/' },
+      { name: 'Flats at Seminole Heights',  img: 'img/flats-seminole-heights.jpg', url: 'https://www.flatsatseminoleheights.com/' },
     ];
     const BY_NAME = Object.fromEntries(PROPERTIES.map((p) => [p.name, p]));
     const TIER_LABEL = { liked: 'Liked', fine: 'Fine', didnt_like: "Didn't like" };
@@ -962,7 +963,7 @@
       return `
         <header class="top"><h1>Tampa Tour Vote</h1>${pill()}</header>
         <div class="section-head">
-          <h2>The six places</h2>
+          <h2>The ${PROPERTIES.length} places</h2>
           <p>Rate them as you tour · you can add more later</p>
         </div>
         <div class="card-grid">
